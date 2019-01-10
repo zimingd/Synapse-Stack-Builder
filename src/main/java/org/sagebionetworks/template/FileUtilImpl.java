@@ -40,7 +40,7 @@ public class FileUtilImpl implements FileUtil {
 
 	@Override
 	public File getClassPathResource(String relativePath){
-		URL fileUrl = FileUtilImpl.class.getClassLoader().getResource(relativePath);
+		URL fileUrl = ClassLoader.getSystemClassLoader().getResource(relativePath);
 		if (fileUrl == null){
 			throw new IllegalArgumentException("The path " + relativePath +  " does not exist on the classpath");
 		}

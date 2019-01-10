@@ -4,7 +4,9 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.doAnswer;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.io.File;
@@ -20,7 +22,7 @@ import org.mockito.invocation.InvocationOnMock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.mockito.stubbing.Answer;
 import org.sagebionetworks.template.config.Configuration;
-import org.sagebionetworks.template.FileProvider;
+import org.sagebionetworks.template.FileUtil;
 import org.sagebionetworks.template.TemplateGuiceModule;
 import org.sagebionetworks.war.WarAppender;
 
@@ -36,7 +38,7 @@ public class ElasticBeanstalkExtentionBuilderImplTest {
 	@Mock
 	WarAppender warAppender;
 	@Mock
-	FileProvider fileProvider;
+	FileUtil fileUtil;
 	@Mock
 	File mockWar;
 	@Mock
@@ -49,6 +51,8 @@ public class ElasticBeanstalkExtentionBuilderImplTest {
 	File mockFile;
 	@Mock
 	File mockSslConf;
+	@Mock
+	File mockLocalResourceEbextensions;
 
 	ElasticBeanstalkExtentionBuilderImpl builder;
 
@@ -64,7 +68,7 @@ public class ElasticBeanstalkExtentionBuilderImplTest {
 		// Use the actual velocity entity
 		velocityEngine = new TemplateGuiceModule().velocityEngineProvider();
 		builder = new ElasticBeanstalkExtentionBuilderImpl(certifiateBuilder, velocityEngine, configuration,
-				warAppender, fileProvider);
+				warAppender, fileUtil);
 		// call accept on the consumer.
 		doAnswer(new Answer<File>() {
 			@Override
@@ -75,15 +79,17 @@ public class ElasticBeanstalkExtentionBuilderImplTest {
 				return mockWarCopy;
 			}
 		}).when(warAppender).appendFilesCopyOfWar(any(File.class), any(Consumer.class));
-		when(fileProvider.createNewFile(any(File.class), any(String.class))).thenReturn(mockFile);
+		when(fileUtil.createNewFile(any(File.class), any(String.class))).thenReturn(mockFile);
+		when(fileUtil.createNewFile(any(File.class), eq(ElasticBeanstalkExtentionBuilderImpl.DOT_EBEXTENSIONS))).thenReturn(mockExtentionsFolder);
 		configWriter = new StringWriter();
 		sslConfWriter = new StringWriter();
-		when(fileProvider.createFileWriter(any(File.class))).thenReturn(configWriter, sslConfWriter);
+		when(fileUtil.createFileWriter(any(File.class))).thenReturn(configWriter, sslConfWriter);
 		bucketName = "someBucket";
 		when(configuration.getConfigurationBucket()).thenReturn(bucketName);
 		x509CertificatePem = "x509pem";
 		privateKeyPem = "privatePem";
 		when(certifiateBuilder.buildNewX509CertificatePair()).thenReturn(new CertificatePair(x509CertificatePem, privateKeyPem));
+		when(fileUtil.getClassPathResource(ElasticBeanstalkExtentionBuilderImpl.RESOURCE_EBEXTENSIONS_DIRECTORY)).thenReturn(mockLocalResourceEbextensions);
 	}
 
 	@Test
@@ -101,6 +107,9 @@ public class ElasticBeanstalkExtentionBuilderImplTest {
 		String sslConf = sslConfWriter.toString();
 		assertTrue(sslConf.contains("/etc/pki/tls/certs/server.crt"));
 		assertTrue(sslConf.contains("/etc/pki/tls/certs/server.key"));
+
+		verify(fileUtil).getClassPathResource(".ebextensions");
+		verify(fileUtil).copyDirectory(mockLocalResourceEbextensions, mockExtentionsFolder);
 	}
 
 }

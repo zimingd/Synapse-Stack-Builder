@@ -7,12 +7,15 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
 import java.io.Writer;
+import java.net.URL;
+
+import org.apache.commons.io.FileUtils;
 
 /**
- * Basic implementation of FileProvider.
+ * Basic implementation of FileUtil.
  *
  */
-public class FileProviderImpl implements FileProvider {
+public class FileUtilImpl implements FileUtil {
 
 	@Override
 	public File createTempFile(String prefix, String suffix) throws IOException {
@@ -35,4 +38,21 @@ public class FileProviderImpl implements FileProvider {
 		}
 	}
 
+	@Override
+	public File getClassPathResource(String relativePath){
+		URL fileUrl = FileUtilImpl.class.getClassLoader().getResource(relativePath);
+		if (fileUrl == null){
+			throw new IllegalArgumentException("The path " + relativePath +  " does not exist on the classpath");
+		}
+		return new File(fileUrl.getFile());
+	}
+
+	@Override
+	public void copyDirectory(File srcDir, File destDir){
+		try {
+			FileUtils.copyDirectory(srcDir, destDir);
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
+	}
 }

@@ -78,7 +78,7 @@ public class TemplateGuiceModule extends com.google.inject.AbstractModule {
 		bind(RepositoryTemplateBuilder.class).to(RepositoryTemplateBuilderImpl.class);
 		bind(ArtifactDownload.class).to(ArtifactDownloadImpl.class);
 		bind(ArtifactCopy.class).to(ArtifactCopyImpl.class);
-		bind(FileProvider.class).to(FileProviderImpl.class);
+		bind(FileUtil.class).to(FileUtilImpl.class);
 		bind(ThreadProvider.class).to(ThreadProviderImp.class);
 		bind(IdGeneratorBuilder.class).to(IdGeneratorBuilderImpl.class);
 		bind(SecretBuilder.class).to(SecretBuilderImpl.class);

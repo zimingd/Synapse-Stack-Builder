@@ -1,0 +1,10 @@
+"DomainArn": {
+	"Value": {
+		"Fn::GetAtt": ["${stack}${instance}ElasticsearchDomain", "DomainArn"]
+	}
+},
+"DomainEndpoint": {
+	"Value": {
+		"Fn::GetAtt": ["${stack}${instance}ElasticsearchDomain", "DomainEndpoint"]
+	}
+}

@@ -1,0 +1,99 @@
+
+		,"${stack}${instance}ElasticSearchSecurityGroup": {
+			"Type": "AWS::EC2::SecurityGroup",
+			"Properties": {
+				"GroupDescription": "VPC Security Group for ${stack}-${instance} that grants access to VPN traffic and ${subnetGroupColor} public subnets.",
+				"VpcId" : {"Fn::ImportValue": "${vpcExportPrefix}-VPCId"},
+				"SecurityGroupIngress": [
+					{
+						"Description": "Allow all VPN traffic",
+						"FromPort": "443",
+						"IpProtocol": "tcp",
+						"ToPort": "443",
+						"CidrIp": {"Fn::ImportValue": "${vpcExportPrefix}-VPCId"}
+					},
+					{
+						"Description": "Allow Green subnet one access to ElasticSearch",
+						"FromPort": "443",
+						"IpProtocol": "tcp",
+						"ToPort": "443",
+						"CidrIp": {"Fn::ImportValue": "${vpcExportPrefix}-${subnetGroupColor}-CIDR"}
+					}
+				],
+				"Tags": [
+					{
+						"Key": "Application",
+						"Value": {"Ref": "AWS::StackName"}
+					},
+					{
+						"Key": "Name",
+						"Value": "${stack}${instance}VpcDatabaseSecurityGroup"
+					}
+				]
+			}
+		},
+		"${stack}${instance}ElasticsearchDomain": {
+			"Type": "AWS::Elasticsearch::Domain",
+			"Properties": {
+				"ElasticsearchVersion": "6.7",
+				"ElasticsearchClusterConfig": {
+					"InstanceCount": "1",
+					"InstanceType": "c5.large.elasticsearch"
+				},
+				"EBSOptions": {
+					"EBSEnabled" : "true",
+					"Iops" : 0,
+					"VolumeSize" : 20,
+					"VolumeType" : "gp2"
+				},
+				"SnapshotOptions": {
+					"AutomatedSnapshotStartHour": "0"
+				},
+				"NodeToNodeEncryptionOptions":{
+					"Enabled":true
+				},
+				"EncryptionAtRestOptions":{
+					"Enabled":true,
+					"KmsKeyId":{"$Ref":"${stack}${instance}CMK"}
+				}
+				"AccessPolicies": {
+					"Version": "2012-10-17",
+					"Statement": [{
+						"Effect": "Deny",
+						"Principal": {
+							"AWS": "*"
+						},
+						"Action": "es:*",
+						"Resource": "*",
+						"Condition": {
+							"StringNotLike": {
+								"aws:userid": {
+												"Fn::Join": [
+												"",
+												[
+												"arn:aws:iam::",
+												{
+												"Ref": "AWS::AccountId"
+												},
+												":*"
+												]
+												]
+												}
+							}
+						}
+					}]
+				},
+				"AdvancedOptions": {
+					"rest.action.multi.allow_explicit_index": "true"
+				},
+				"VPCOptions" : {
+					"SubnetIds" : [{ "Fn::Select" :[0,{"Fn::Split": [
+						",",
+						{"Fn::ImportValue": "${vpcExportPrefix}-${subnetGroupColor}-Private-Subnets"}
+					]}]}],
+					"SecurityGroupIds" : [
+						{"Ref" : "ElasticSearchSecurityGroup"}
+					]
+				}
+			}
+		}

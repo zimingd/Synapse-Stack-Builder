@@ -10,7 +10,7 @@
 						"FromPort": "443",
 						"IpProtocol": "tcp",
 						"ToPort": "443",
-						"CidrIp": {"Fn::ImportValue": "${vpcExportPrefix}-VPCId"}
+						"CidrIp": {"Fn::ImportValue": "${vpcExportPrefix}-VpnCidr"}
 					},
 					{
 						"Description": "Allow Green subnet one access to ElasticSearch",

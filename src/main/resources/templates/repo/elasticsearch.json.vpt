@@ -45,12 +45,11 @@
 						"t2.small.elasticsearch"
 					#end
 				},
-	##			#if (!$isDeveloperTestStack)
-	##				"EncryptionAtRestOptions":{
-	##				"Enabled":true,
-	##				"KmsKeyId":{"Ref":"${stack}${instance}CMK"}
-	##			},
-	##			#end
+				#if (!$isDeveloperTestStack)
+				"EncryptionAtRestOptions":{
+					"Enabled":true
+				},
+				#end
 				"EBSOptions": {
 					"EBSEnabled" : "true",
 					"Iops" : 0,

@@ -66,28 +66,12 @@
 				"AccessPolicies": {
 					"Version": "2012-10-17",
 					"Statement": [{
-						"Effect": "Deny",
+						"Effect": "Allow",
 						"Principal": {
 							"AWS": "*"
 						},
 						"Action": "es:*",
 						"Resource": "*",
-						"Condition": {
-							"StringNotLike": {
-								"aws:userid": {
-												"Fn::Join": [
-												"",
-												[
-												"arn:aws:iam::",
-												{
-												"Ref": "AWS::AccountId"
-												},
-												":*"
-												]
-												]
-												}
-							}
-						}
 					}]
 				},
 				"AdvancedOptions": {

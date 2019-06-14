@@ -2,7 +2,7 @@ package org.sagebionetworks.template.repo;
 
 
 import static org.sagebionetworks.template.Constants.IS_DEVELOPER_TEST_STACK;
-import static org.sagebionetworks.template.Constants.PROPERTY_KEY_DEVELOPER_TEST_STACK;
+import static org.sagebionetworks.template.Constants.PROPERTY_KEY_IS_DEVELOPER_TEST_STACK;
 
 import com.google.inject.Inject;
 import org.apache.velocity.VelocityContext;
@@ -25,7 +25,7 @@ public class DeveloperTestStackVelocityContextProvider implements VelocityContex
 
 	@Override
 	public void addToContext(VelocityContext context) {
-		boolean isDeveloperStack = config.getBooleanProperty(PROPERTY_KEY_DEVELOPER_TEST_STACK);
+		Boolean isDeveloperStack = config.getBooleanProperty(PROPERTY_KEY_IS_DEVELOPER_TEST_STACK);
 		context.put(IS_DEVELOPER_TEST_STACK, isDeveloperStack);
 	}
 }

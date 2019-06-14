@@ -74,7 +74,7 @@ public class Constants {
 	public static final String PROPERTY_KEY_ELASTICBEANSTALK_IMAGE_VERSION_JAVA = PROPERTY_KEY_ELASTICBEANSTALK_IMAGE_VERSION_PREFIX + "java";
 	public static final String PROPERTY_KEY_ELASTICBEANSTALK_IMAGE_VERSION_TOMCAT = PROPERTY_KEY_ELASTICBEANSTALK_IMAGE_VERSION_PREFIX + "tomcat";
 	public static final String PROPERTY_KEY_ELASTICBEANSTALK_IMAGE_VERSION_AMAZONLINUX = PROPERTY_KEY_ELASTICBEANSTALK_IMAGE_VERSION_PREFIX + "amazonlinux";
-	public static final String PROPERTY_KEY_DEVELOPER_TEST_STACK = "org.sagebionetworks.repository.is.developer.stack";
+	public static final String PROPERTY_KEY_IS_DEVELOPER_TEST_STACK = "org.sagebionetworks.repository.is.developer.stack";
 
 
 	// templates

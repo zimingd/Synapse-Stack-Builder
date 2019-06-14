@@ -54,7 +54,7 @@
 				},
 				"EncryptionAtRestOptions":{
 					"Enabled":true,
-					"KmsKeyId":{"$Ref":"${stack}${instance}CMK"}
+					"KmsKeyId":{"Ref":"${stack}${instance}CMK"}
 				}
 				"AccessPolicies": {
 					"Version": "2012-10-17",

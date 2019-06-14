@@ -39,13 +39,13 @@
 				"ElasticsearchClusterConfig": {
 					"InstanceCount": "1",
 					"InstanceType":
-					#if (!isDeveloperTestStack)
+					#if (!$isDeveloperTestStack)
 						"c5.large.elasticsearch"
 					#else
 						"t2.small.elasticsearch"
 					#end
 				},
-				#if (!isDeveloperTestStack)
+				#if (!$isDeveloperTestStack)
 					"EncryptionAtRestOptions":{
 					"Enabled":true,
 					"KmsKeyId":{"Ref":"${stack}${instance}CMK"}

@@ -719,7 +719,7 @@
 			}
 		}
 		#end
-		,"LoadBalancerSecurityGroup": {
+		,"ElasticBeanstalkDomainEndpoint": {
 			"Description": "The domain endpoint of the provisioned ElasticSearch index",
 			"Value": {
 					"Fn::GetAtt": ["${stack}${instance}ElasticsearchDomain", "DomainEndpoint"]

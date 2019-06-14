@@ -38,8 +38,19 @@
 				"ElasticsearchVersion": "6.7",
 				"ElasticsearchClusterConfig": {
 					"InstanceCount": "1",
-					"InstanceType": "c5.large.elasticsearch"
+					"InstanceType":
+					#if (!isDeveloperTestStack)
+						"c5.large.elasticsearch"
+					#else
+						"t2.small.elasticsearch"
+					#end
 				},
+				#if (!isDeveloperTestStack)
+					"EncryptionAtRestOptions":{
+					"Enabled":true,
+					"KmsKeyId":{"Ref":"${stack}${instance}CMK"}
+				},
+				#end
 				"EBSOptions": {
 					"EBSEnabled" : "true",
 					"Iops" : 0,
@@ -51,10 +62,6 @@
 				},
 				"NodeToNodeEncryptionOptions":{
 					"Enabled":true
-				},
-				"EncryptionAtRestOptions":{
-					"Enabled":true,
-					"KmsKeyId":{"Ref":"${stack}${instance}CMK"}
 				},
 				"AccessPolicies": {
 					"Version": "2012-10-17",

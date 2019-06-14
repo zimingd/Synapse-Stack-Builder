@@ -475,6 +475,13 @@
 						"Namespace": "aws:elasticbeanstalk:application:environment",
 						"OptionName": "org.sagebionetworks.secrets.bucket",
 						"Value": "${environment.secretsSource.bucket}"
+					},
+					{
+						"Namespace": "aws:elasticbeanstalk:application:environment",
+						"OptionName": "org.sagebionetworks.repo.search.elasticsearch.endpoint",
+						"Value": {
+							"Fn::ImportValue": "${sharedExportPrefix}-ElasticSearch-Endpoint"
+						}
 					}
 					#end
 				]

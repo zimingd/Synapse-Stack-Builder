@@ -92,7 +92,7 @@
 						{"Fn::ImportValue": "${vpcExportPrefix}-${subnetGroupColor}-Private-Subnets"}
 					]}]}],
 					"SecurityGroupIds" : [
-						{"Ref" : "ElasticSearchSecurityGroup"}
+						{"Ref" : "${stack}${instance}ElasticSearchSecurityGroup"}
 					]
 				}
 			}
